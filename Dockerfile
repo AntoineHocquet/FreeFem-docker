@@ -52,14 +52,19 @@ FROM ubuntu
 
 LABEL maintainer="https://github.com/orgs/FreeFem/people"
 
-# Install dependencies
+# Install dependencies (add python3 and pip)
 RUN apt-get update && apt-get install -y \
     libopenblas-dev \
     libhdf5-dev \
     libgsl-dev \
     libfftw3-dev \
     libnlopt-dev \
+    python3 \
+    python3-pip \
     && rm -rf /var/lib/apt/lists/*
+
+# Install Streamlit and required Python libraries
+RUN pip3 install --no-cache-dir streamlit numpy pandas
 
 # Copy FreeFEM repository
 RUN mkdir /usr/freefem
@@ -68,6 +73,15 @@ COPY --from=builder /usr/freefem /usr/freefem
 # Add executable in PATH
 ENV PATH /usr/freefem/bin:$PATH
 
-# Default command
-ENV GLOB *.edp
-CMD ["bash", "-c", "ls /data/$GLOB | xargs -I {} /usr/freefem/bin/ff-mpirun -n 1 {}"]
+# Set working directory for Streamlit app
+WORKDIR /app
+
+# Copy Streamlit app (we will create `app.py` later)
+COPY app.py .
+
+# Expose Streamlit port
+EXPOSE 8501
+
+# Default command: Run Streamlit instead of FreeFEM++
+CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+
