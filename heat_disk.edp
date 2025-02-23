@@ -1,0 +1,37 @@
+// Define a 2D disk mesh
+int N = 50; // Number of mesh points
+real R = 1.0; // Radius of the disk
+
+border circle(t = 0, 2*pi) { 
+    x = R * cos(t); 
+    y = R * sin(t); 
+}
+
+mesh Th = buildmesh(circle(N));
+
+// Define finite element space
+fespace Vh(Th, P1);
+Vh u, v, u0; // u: solution, v: test function, u0: previous time step
+
+// Initial condition
+u0 = 1 - x^2 - y^2;
+
+// Time-stepping parameters
+real dt = 0.01; // Time step size
+real T = 1.0;   // Final time
+int nT = T / dt; // Number of time steps
+
+// Problem definition: time-dependent heat equation
+problem heat(u, v)
+    = int2d(Th)(u * v + dt * (dx(u) * dx(v) + dy(u) * dy(v))) // Time step + diffusion
+    - int2d(Th)(u0 * v) // Previous time step
+    + on(circle, u = 0); // Dirichlet boundary condition
+
+// Time-stepping loop
+for (int t = 0; t < nT; t++) {
+    heat; // Solve at the current time step
+    u0 = u; // Update the previous time step
+}
+
+// Plot the final result
+plot(u, value = true, fill = true, wait = true);
