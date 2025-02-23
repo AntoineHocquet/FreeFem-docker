@@ -10,6 +10,12 @@ Docker image of [FreeFEM](https://freefem.org/).
 
 <!-- /TOC -->
 
+
+## URL for the release used
+
+https://github.com/FreeFem/FreeFem-docker/releases/download/v4.12/freefem.tar.gz
+
+
 ## Usage
 
 Extract `freefemX.XX.tar.gz` (available in the [releases](https://github.com/FreeFem/FreeFem-docker/releases)) using:
