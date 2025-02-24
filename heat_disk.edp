@@ -21,6 +21,10 @@ real dt = 0.01; // Time step size
 real T = 1.0;   // Final time
 int nT = T / dt; // Number of time steps
 
+// Create output CSV file
+ofstream csvFile("solution_data.csv");
+csvFile << "time,x,y,u\n"; // Header row for CSV
+
 // Problem definition: time-dependent heat equation
 problem heat(u, v)
     = int2d(Th)(u * v + dt * (dx(u) * dx(v) + dy(u) * dy(v))) // Time step + diffusion
@@ -28,10 +32,24 @@ problem heat(u, v)
     + on(circle, u = 0); // Dirichlet boundary condition
 
 // Time-stepping loop
-for (int t = 0; t < nT; t++) {
+for (int t_step = 0; t_step <= nT; t_step++) {
+    real currentTime = t_step * dt;
+
     heat; // Solve at the current time step
     u0 = u; // Update the previous time step
+
+    // Store data in CSV
+    for (int k = 0; k < Th.nt; k++) {
+        for (int j = 0; j < 3; j++) {
+            real x_coord = Th[k][j].x;
+            real y_coord = Th[k][j].y;
+            real u_value = u[][Vh(k, j)];
+            csvFile << currentTime << "," << x_coord << "," << y_coord << "," << u_value << "\n";
+        }
+    }
 }
+
+csvFile.close(); // Close the CSV file
 
 // Plot the final result
 plot(u, value = true, fill = true, wait = true);
