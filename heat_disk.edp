@@ -32,8 +32,8 @@ problem heat(u, v)
     + on(circle, u = 0); // Dirichlet boundary condition
 
 // Time-stepping loop
-for (int t_step = 0; t_step <= nT; t_step++) {
-    real currentTime = t_step * dt;
+for (int tStep = 0; tStep <= nT; tStep++) {
+    real currentTime = tStep * dt;
 
     heat; // Solve at the current time step
     u0 = u; // Update the previous time step
@@ -41,15 +41,13 @@ for (int t_step = 0; t_step <= nT; t_step++) {
     // Store data in CSV
     for (int k = 0; k < Th.nt; k++) {
         for (int j = 0; j < 3; j++) {
-            real x_coord = Th[k][j].x;
-            real y_coord = Th[k][j].y;
-            real u_value = u[][Vh(k, j)];
-            csvFile << currentTime << "," << x_coord << "," << y_coord << "," << u_value << "\n";
+            real xCoord = Th[k][j].x;
+            real yCoord = Th[k][j].y;
+            real uValue = u[][Vh(k, j)];
+            csvFile << currentTime << "," << xCoord << "," << yCoord << "," << uValue << "\n";
         }
     }
 }
-
-csvFile.close(); // Close the CSV file
 
 // Plot the final result
 plot(u, value = true, fill = true, wait = true);
