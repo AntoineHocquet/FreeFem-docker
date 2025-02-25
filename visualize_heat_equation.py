@@ -7,16 +7,15 @@ from matplotlib.animation import FuncAnimation
 data = pd.read_csv('solution_data.csv')
 
 # Extract unique time steps
-time_steps =data['time'].unique()
+time_steps = data['time'].unique()
 
-# Extract mesh points
-x = data['x'].unique()
-y = data['y'].unique()
-
-# Prepare the triangulation of the mesh for plotting
-# Assuming mesh structure stays constant over time
+# Extract mesh points from the first time step
 mesh_points = data[data['time'] == time_steps[0]]
-triang = tri.Triangulation(mesh_points['x'], mesh_points['y'])
+x = mesh_points['x'].values
+y = mesh_points['y'].values
+
+# Prepare the triangulation
+triang = tri.Triangulation(x, y)
 
 # Initialize the plot
 fig, ax = plt.subplots(figsize=(6, 5))
@@ -28,7 +27,7 @@ ax.set_title("Heat Equation Simulation Over Time")
 ax.set_xlabel("X")
 ax.set_ylabel("Y")
 
-# Function to update the animation at each time step
+# Update function for the animation
 def update(frame):
     current_data = data[data['time'] == time_steps[frame]]
     ax.clear()
@@ -41,8 +40,8 @@ def update(frame):
 # Create the animation
 anim = FuncAnimation(fig, update, frames=len(time_steps), interval=100, repeat=False)
 
-# Save the animation as an MP4 file
-anim.save('heat_equation_simulation.mp4', writer='ffmpeg')
+# Save the animation as a GIF
+anim.save('heat_equation_simulation.gif', writer='imagemagick')
 
-# Show the animation (if running interactively)
-plt.show()
+# Close the plot after saving
+plt.close()
