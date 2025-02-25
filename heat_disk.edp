@@ -22,7 +22,8 @@ real T = 1.0;   // Final time
 int nT = T / dt; // Number of time steps
 
 // Create output CSV file
-ofstream csvFile("solution_data.csv");
+ofstream csvFile("/data/solution_data.csv");
+
 csvFile << "time,x,y,u\n"; // Header row for CSV
 
 // Problem definition: time-dependent heat equation
