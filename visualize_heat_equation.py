@@ -14,12 +14,16 @@ mesh_points = data[data['time'] == time_steps[0]]
 x = mesh_points['x'].values
 y = mesh_points['y'].values
 
+# Compute global min and max for color scale
+u_min = data['u'].min()
+u_max = data['u'].max()
+
 # Prepare the triangulation
 triang = tri.Triangulation(x, y)
 
 # Initialize the plot
 fig, ax = plt.subplots(figsize=(6, 5))
-contour = ax.tricontourf(triang, mesh_points['u'], cmap='inferno')
+contour = ax.tricontourf(triang, mesh_points['u'], cmap='inferno',vmin=u_min,vmax=u_max)
 cbar = plt.colorbar(contour)
 cbar.set_label('Temperature')
 
@@ -31,7 +35,7 @@ ax.set_ylabel("Y")
 def update(frame):
     current_data = data[data['time'] == time_steps[frame]]
     ax.clear()
-    contour = ax.tricontourf(triang, current_data['u'], cmap='inferno')
+    contour = ax.tricontourf(triang, current_data['u'], cmap='inferno',vmin=u_min,vmax=u_max)
     ax.set_title(f"Heat Equation at Time = {time_steps[frame]:.2f}s")
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
