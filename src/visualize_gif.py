@@ -44,7 +44,7 @@ def generate_gif():
         ax.set_title(f"Heat Equation at Time = {time_steps[frame]:.2f}s")
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
-        return contour.collections
+        #return contour.collections
 
     # Create the animation
     anim = FuncAnimation(fig, update, frames=len(time_steps), interval=100, repeat=False)
