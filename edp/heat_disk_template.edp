@@ -6,7 +6,7 @@ border circle(t = 0, 2*pi) {
     y = R * sin(t); 
 }
 
-int N = 50; // Number of mesh points
+int N = %%mesh_resolution%%; // Number of mesh points
 mesh Th = buildmesh(circle(N));
 
 // Define finite element space
@@ -17,8 +17,8 @@ Vh u, v, u0; // u: solution, v: test function, u0: previous time step
 u0 = 1 - x^2 - y^2;
 
 // Time-stepping parameters
-real T = 1.0; // Final time
-real dt = 0.05; // Time step size
+real T = %%T%%; // Final time
+real dt = %%dt%%; // Time step size
 int nT = T / dt; // Number of time steps
 
 // Create output CSV file
